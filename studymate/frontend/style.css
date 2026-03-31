@@ -967,4 +967,526 @@ a:hover {
   flex: 1;
   font-size: 11px;
   color: var(--text3);
-  text-align: center;
+  text-align: center;
+}
+
+.feedback-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 1rem;
+}
+.fb-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border);
+  font-size: 13px;
+}
+.fb-row.correct {
+  background: #eaf3de;
+  border-color: #9fcc6e;
+}
+.fb-row.wrong {
+  background: var(--red-light);
+  border-color: #f0a0a0;
+}
+.fb-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+}
+.fb-row.correct .fb-icon {
+  background: #3b6d11;
+  color: white;
+}
+.fb-row.wrong .fb-icon {
+  background: var(--red);
+  color: white;
+}
+
+/* ─── SHARE BOX ─────────────────────────────────────────── */
+.share-box {
+  background: var(--surface2);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.share-link {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text2);
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.copy-btn {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--radius);
+  border: 0.5px solid var(--border2);
+  background: var(--surface);
+  color: var(--text2);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.copy-btn:hover {
+  background: var(--surface2);
+}
+
+/* ─── TOAST ─────────────────────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  background: var(--text);
+  color: white;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.25s;
+  pointer-events: none;
+  z-index: 999;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.toast.success {
+  background: var(--green-dark);
+}
+.toast.error {
+  background: #a32d2d;
+}
+/* ═══════════════════════════════════════════════════════════════
+   STUDYMATE AI — MOBILE RESPONSIVE STYLES
+   Add this file as a <link> after style.css in index.html:
+   <link rel="stylesheet" href="mobile.css">
+   ═══════════════════════════════════════════════════════════════ */
+
+
+/* ─── TABLET (max 900px) ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .settings-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .main-inner {
+    padding: 1.5rem;
+  }
+}
+
+
+/* ─── MOBILE (max 680px) ──────────────────────────────────── */
+@media (max-width: 680px) {
+
+  /* ── APP LAYOUT: stack sidebar below as bottom nav ── */
+  .app-layout {
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: 68px; /* space for bottom nav */
+  }
+
+  /* ── SIDEBAR → BOTTOM NAV BAR ── */
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 68px;
+    flex-direction: row;
+    align-items: stretch;
+    border-right: none;
+    border-top: 0.5px solid var(--border);
+    padding: 0;
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.07);
+  }
+
+  /* Hide logo and user section in mobile bottom nav */
+  .sidebar-logo,
+  .sidebar-user {
+    display: none;
+  }
+
+  /* Nav fills full width */
+  .sidebar-nav {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    padding: 0;
+    gap: 0;
+  }
+
+  /* Each nav item becomes a column tab */
+  .nav-item {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 4px 6px;
+    font-size: 10px;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 0;
+    letter-spacing: 0.01em;
+  }
+
+  .nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nav-item.active {
+    background: transparent;
+    color: var(--green-dark);
+    border-top: 2px solid var(--green);
+  }
+
+  .nav-item:hover {
+    background: var(--green-light);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    flex: 1;
+    width: 100%;
+  }
+
+  .main-inner {
+    padding: 1.25rem 1rem 1rem;
+    max-width: 100%;
+  }
+
+  .page-title {
+    font-size: 19px;
+  }
+
+  .page-sub {
+    font-size: 13px;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── AUTH PAGES ── */
+  .auth-wrap {
+    padding: 1.25rem 1rem;
+    align-items: flex-start;
+    padding-top: 3rem;
+  }
+
+  .auth-card {
+    padding: 1.75rem 1.25rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .auth-title {
+    font-size: 20px;
+  }
+
+  /* ── UPLOAD ZONE ── */
+  .upload-zone {
+    padding: 1.75rem 1rem;
+  }
+
+  .upload-icon-box {
+    width: 44px;
+    height: 44px;
+  }
+
+  .upload-title {
+    font-size: 14px;
+  }
+
+  /* ── SETTINGS GRID ── */
+  .settings-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .setting-card {
+    padding: 0.875rem;
+  }
+
+  /* Make option buttons larger/easier to tap */
+  .opt {
+    font-size: 13px;
+    padding: 7px 14px;
+    min-height: 36px;
+  }
+
+  /* ── GENERATE BUTTON ── */
+  .gen-btn {
+    font-size: 15px;
+    padding: 14px;
+    margin-top: 1rem;
+    border-radius: var(--radius);
+  }
+
+  /* ── STATS ROW ── */
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .stat-card {
+    padding: 0.875rem;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+
+  /* ── QUIZ CARDS ── */
+  .quiz-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .quiz-actions {
+    width: 100%;
+    gap: 8px;
+  }
+
+  .quiz-actions .btn-sm {
+    flex: 1;
+    text-align: center;
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+
+  .quiz-title {
+    white-space: normal; /* allow wrapping on mobile */
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  /* ── CBT HEADER ── */
+  .cbt-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+  }
+
+  .timer-pill {
+    font-size: 15px;
+    padding: 6px 12px;
+    align-self: flex-start;
+  }
+
+  /* ── CBT QUESTIONS ── */
+  .question-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .q-text {
+    font-size: 14px;
+    margin-bottom: 1rem;
+  }
+
+  .opt-row {
+    padding: 11px 12px;
+    font-size: 13px;
+  }
+
+  /* Larger tap target for option letters */
+  .opt-letter {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ── CBT FOOTER ── */
+  .cbt-footer {
+    flex-direction: row;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .cbt-footer .btn-sm {
+    padding: 10px 18px;
+    font-size: 13px;
+    min-height: 40px;
+  }
+
+  /* Hide dot nav on very small screens, it gets too crowded */
+  .dot-nav {
+    display: none;
+  }
+
+  /* ── THEORY CARD ── */
+  .theory-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .theory-textarea {
+    min-height: 100px;
+    font-size: 14px;
+  }
+
+  /* ── RESULTS ── */
+  .result-hero {
+    padding: 1.5rem 1rem;
+  }
+
+  .score-ring {
+    width: 96px;
+    height: 96px;
+  }
+
+  .score-num {
+    font-size: 26px;
+  }
+
+  .result-stats {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  .result-actions .btn-sm {
+    width: 100%;
+    padding: 11px;
+    font-size: 13px;
+  }
+
+  /* ── FEEDBACK LIST ── */
+  .fb-row {
+    padding: 10px 12px;
+    font-size: 13px;
+    align-items: flex-start;
+  }
+
+  /* ── SHARE BOX ── */
+  .share-box {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .share-link {
+    font-size: 12px;
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  .copy-btn {
+    width: 100%;
+    padding: 9px;
+    text-align: center;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    bottom: 80px; /* above bottom nav */
+    left: 1rem;
+    right: 1rem;
+    text-align: center;
+  }
+
+  /* ── CARD ── */
+  .card {
+    padding: 1rem;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+}
+
+
+/* ─── VERY SMALL SCREENS (max 380px) ─────────────────────── */
+@media (max-width: 380px) {
+  .main-inner {
+    padding: 1rem 0.875rem;
+  }
+
+  .nav-item {
+    font-size: 9px;
+    gap: 3px;
+  }
+
+  .nav-item svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+
+  .auth-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .score-ring {
+    width: 88px;
+    height: 88px;
+  }
+
+  .score-num {
+    font-size: 22px;
+  }
+}
+
+
+/* ─── MOBILE HEADER BAR (shown only on mobile) ──────────── */
+/* Add this div in your HTML just inside #appLayout, before <aside>:
+   <div class="mobile-topbar">
+     <div class="sidebar-logo" style="margin:0;border:none;padding:0">
+       <div class="sidebar-dot"></div>
+       <span class="sidebar-name">StudyMate AI</span>
+     </div>
+     <div class="user-avatar" id="mobileAvatar">U</div>
+   </div>
+*/
+.mobile-topbar {
+  display: none;
+}
+
+@media (max-width: 680px) {
+  .mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+}

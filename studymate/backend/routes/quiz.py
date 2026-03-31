@@ -38,18 +38,31 @@ def generate_quiz():
         return jsonify({"error": "Document not found or access denied"}), 404
 
     doc = doc_result.data[0]
-    extracted_text = doc["extracted_text"]
+    extracted_text = doc.get("extracted_text", "")
+
+    # Guard: make sure there is actual text before calling AI
+    if not extracted_text or len(extracted_text.strip()) < 100:
+        return jsonify({
+            "error": "This document has no usable text. It may be a scanned image PDF. Please upload a text-based PDF."
+        }), 422
 
     # Generate questions via AI service
-    questions = generate_questions(
-        text=extracted_text,
-        difficulty=difficulty,
-        num_mcq=num_mcq if "mcq" in question_types else 0,
-        num_theory=num_theory if "theory" in question_types else 0
-    )
+    try:
+        questions = generate_questions(
+            text=extracted_text,
+            difficulty=difficulty,
+            num_mcq=num_mcq if "mcq" in question_types else 0,
+            num_theory=num_theory if "theory" in question_types else 0
+        )
+    except EnvironmentError as e:
+        return jsonify({"error": str(e)}), 500
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 422
 
     if not questions:
-        return jsonify({"error": "Failed to generate questions. Please try again."}), 500
+        return jsonify({
+            "error": "Failed to generate questions from your PDF. Please try again or use a different document."
+        }), 500
 
     # Save quiz to database
     quiz_result = db.table("quizzes").insert({
