@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMate AI — PDF to Quiz Platform</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- AUTH: LOGIN PAGE -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="loginPage" class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-dot"></div>
+        <span class="auth-logo-text">StudyMate AI</span>
+      </div>
+      <h1 class="auth-title">Welcome back</h1>
+      <p class="auth-sub">Sign in to your account to continue</p>
+      <div class="error-msg" id="loginError"></div>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="loginPassword" placeholder="Your password">
+      </div>
+      <button class="btn-primary" id="loginBtn" onclick="doLogin()">Sign in</button>
+      <p class="auth-switch">Don't have an account? <a href="#" onclick="showAuth('register')">Create one</a></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- AUTH: REGISTER PAGE -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="registerPage" class="auth-wrap hidden">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-dot"></div>
+        <span class="auth-logo-text">StudyMate AI</span>
+      </div>
+      <h1 class="auth-title">Create your account</h1>
+      <p class="auth-sub">Start turning your notes into quizzes today</p>
+      <div class="error-msg" id="registerError"></div>
+      <div class="form-group">
+        <label class="form-label">Full name</label>
+        <input class="form-input" type="text" id="regName" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-input" type="email" id="regEmail" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="regPassword" placeholder="At least 6 characters">
+      </div>
+      <button class="btn-primary" id="registerBtn" onclick="doRegister()">Create account</button>
+      <p class="auth-switch">Already have an account? <a href="#" onclick="showAuth('login')">Sign in</a></p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- MAIN APP -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <div id="appLayout" class="app-layout hidden">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-dot"></div>
+        <span class="sidebar-name">StudyMate AI</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" id="nav-generate" onclick="showPage('generate')">
+          <svg viewBox="0 0 24 24">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+            <polyline points="14,2 14,8 20,8" />
+            <line x1="12" y1="18" x2="12" y2="12" />
+            <polyline points="9,15 12,12 15,15" />
+          </svg>
+          Generate Quiz
+        </button>
+        <button class="nav-item" id="nav-dashboard" onclick="showPage('dashboard')">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+          </svg>
+          My Quizzes
+        </button>
+        <button class="nav-item" id="nav-cbt" onclick="showPage('cbt')">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12,6 12,12 16,14" />
+          </svg>
+          CBT Mode
+        </button>
+        <button class="nav-item" id="nav-results" onclick="showPage('results')">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
+          Results
+        </button>
+      </nav>
+      <div class="sidebar-user">
+        <div class="flex items-center gap-8 mb-1">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <div>
+            <div class="user-name" id="userName">User</div>
+            <div class="user-email" id="userEmail">user@email.com</div>
+          </div>
+        </div>
+        <button class="logout-btn" onclick="doLogout()">Sign out</button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="main-inner">
+
+        <!-- ═══════ GENERATE PAGE ═══════ -->
+        <div id="page-generate">
+          <h1 class="page-title">Generate Quiz</h1>
+          <p class="page-sub">Upload a PDF lecture note and configure your quiz settings below.</p>
+
+          <div class="card mb-2">
+            <input type="file" id="pdfInput" accept=".pdf" style="display:none" onchange="handlePDFSelect(this)">
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('pdfInput').click()">
+              <div class="upload-icon-box">
+                <svg viewBox="0 0 24 24">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                  <polyline points="14,2 14,8 20,8" />
+                  <line x1="12" y1="18" x2="12" y2="12" />
+                  <polyline points="9,15 12,12 15,15" />
+                </svg>
+              </div>
+              <p class="upload-title" id="uploadTitle">Click to upload your PDF</p>
+              <p class="upload-sub" id="uploadSub">Supports PDF files up to 20MB</p>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <div class="setting-card">
+              <div class="setting-label">Question Type</div>
+              <div class="opts">
+                <button class="opt on" onclick="toggleOpt(this,'type')">MCQ</button>
+                <button class="opt on" onclick="toggleOpt(this,'type')">Theory</button>
+              </div>
+            </div>
+            <div class="setting-card">
+              <div class="setting-label">Difficulty</div>
+              <div class="opts" id="opts-diff">
+                <button class="opt" onclick="selectOpt(this,'diff')">Easy</button>
+                <button class="opt on" onclick="selectOpt(this,'diff')">Medium</button>
+                <button class="opt" onclick="selectOpt(this,'diff')">Hard</button>
+              </div>
+            </div>
+            <div class="setting-card">
+              <div class="setting-label">Number of MCQs</div>
+              <div class="opts" id="opts-mcq">
+                <button class="opt" onclick="selectOpt(this,'mcq')">5</button>
+                <button class="opt on" onclick="selectOpt(this,'mcq')">10</button>
+                <button class="opt" onclick="selectOpt(this,'mcq')">15</button>
+                <button class="opt" onclick="selectOpt(this,'mcq')">20</button>
+              </div>
+            </div>
+            <div class="setting-card">
+              <div class="setting-label">Theory Questions</div>
+              <div class="opts" id="opts-theory">
+                <button class="opt" onclick="selectOpt(this,'theory')">3</button>
+                <button class="opt on" onclick="selectOpt(this,'theory')">5</button>
+                <button class="opt" onclick="selectOpt(this,'theory')">8</button>
+                <button class="opt" onclick="selectOpt(this,'theory')">10</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="gen-btn" id="genBtn" onclick="doGenerate()">Generate Questions from PDF</button>
+          <div class="loading-bar" id="loadingBar">
+            <div class="loading-bar-inner">
+              <div class="loading-bar-fill"></div>
+            </div>
+            <p class="loading-label" id="loadingLabel">Uploading PDF...</p>
+          </div>
+        </div>
+
+        <!-- ═══════ DASHBOARD PAGE ═══════ -->
+        <div id="page-dashboard" class="hidden">
+          <h1 class="page-title">My Quizzes</h1>
+          <p class="page-sub">All your generated question banks and performance overview.</p>
+
+          <div class="stats-row" id="statsRow">
+            <div class="stat-card">
+              <div class="stat-label">Quizzes</div>
+              <div class="stat-value" id="stat-quizzes">—</div>
+              <div class="stat-sub">generated</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Attempts</div>
+              <div class="stat-value" id="stat-attempts">—</div>
+              <div class="stat-sub">total</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Average</div>
+              <div class="stat-value" id="stat-avg">—</div>
+              <div class="stat-sub">score</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Best</div>
+              <div class="stat-value" id="stat-best">—</div>
+              <div class="stat-sub">score</div>
+            </div>
+          </div>
+
+          <div class="card-title">Question Banks</div>
+          <div class="quiz-list" id="quizList">
+            <div class="empty-state">
+              <span class="empty-icon">📄</span>
+              <p>No quizzes yet. Upload a PDF to get started.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══════ CBT PAGE ═══════ -->
+        <div id="page-cbt" class="hidden">
+          <div class="cbt-header">
+            <div>
+              <div class="cbt-quiz-title" id="cbtTitle">Select a quiz to begin</div>
+              <div class="cbt-meta" id="cbtMeta">Go to My Quizzes and click Start CBT</div>
+            </div>
+            <div class="timer-pill timer-ok" id="timerPill">
+              <div class="timer-dot"></div>
+              <span id="timerDisplay">30:00</span>
+            </div>
+          </div>
+          <div class="cbt-progress-bar-wrap">
+            <div class="cbt-progress-fill" id="cbtProgressFill" style="width:0%"></div>
+          </div>
+          <div id="cbtQuestions"></div>
+          <div class="cbt-footer">
+            <button class="btn-sm" id="prevBtn" onclick="cbtPrev()">← Previous</button>
+            <div class="dot-nav" id="dotNav"></div>
+            <button class="btn-sm primary" id="nextBtn" onclick="cbtNext()">Next →</button>
+          </div>
+        </div>
+
+        <!-- ═══════ RESULTS PAGE ═══════ -->
+        <div id="page-results" class="hidden">
+          <h1 class="page-title">Results</h1>
+          <p class="page-sub">Your quiz performance and detailed feedback.</p>
+          <div id="resultsContent">
+            <div class="empty-state">
+              <span class="empty-icon">📊</span>
+              <p>No results yet. Complete a quiz in CBT mode first.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /main-inner -->
+    </main>
+  </div><!-- /app-layout -->
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+
+</body>
+<script src="script.js"></script>
+
+</html>
