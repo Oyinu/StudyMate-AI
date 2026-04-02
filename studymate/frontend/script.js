@@ -1,4 +1,4 @@
-const BASE = "https://studymate-ai-2duq.onrender.com/api";
+const BASE = "https://studymate-ai-oq99.onrender.com/api";
 
 // ─── STATE ──────────────────────────────────────────────────
 let currentUser = null;

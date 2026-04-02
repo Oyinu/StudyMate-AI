@@ -6,9 +6,15 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "studymate-dev-secret")
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024  # 20MB max upload
+
+CORS(app, origins=[
+    "https://oyinu.github.io",
+    "http://localhost:3000",
+    "http://localhost:5500",
+    "http://127.0.0.1:5500"
+])
 
 # Register blueprints
 from routes.auth import auth_bp
