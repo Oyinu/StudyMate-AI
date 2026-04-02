@@ -1,8 +1,11 @@
-import os
-import json
-print("DEBUG KEY:", os.getenv("GEMINI_API_KEY"))
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+from google import genai
 
+client = genai.Client(api_key=GEMINI_API_KEY)
+response = client.models.generate_content(
+    model="gemini-2.0-flash",
+    contents=prompt
+)
+raw = response.text.strip()
 
 def generate_questions(text: str, difficulty: str, num_mcq: int, num_theory: int) -> dict:
     """
