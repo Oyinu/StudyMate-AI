@@ -1,37 +1,26 @@
+import os
+import json
 from google import genai
 
-client = genai.Client(api_key=GEMINI_API_KEY)
-response = client.models.generate_content(
-    model="gemini-2.0-flash",
-    contents=prompt
-)
-raw = response.text.strip()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 
 def generate_questions(text: str, difficulty: str, num_mcq: int, num_theory: int) -> dict:
-    """
-    Generate quiz questions from extracted PDF text using Gemini API.
-    """
     if not GEMINI_API_KEY:
         raise EnvironmentError(
-            "GEMINI_API_KEY is not set. Please add it to your .env file."
+            "GEMINI_API_KEY is not set. Please add it in Render's Environment settings."
         )
-
     if not text or len(text.strip()) < 100:
         raise ValueError(
             "Extracted PDF text is too short or empty. Cannot generate questions."
         )
-
     return _generate_with_gemini(text, difficulty, num_mcq, num_theory)
 
 
 def _generate_with_gemini(text: str, difficulty: str, num_mcq: int, num_theory: int) -> dict:
-    """Generate questions using Google Gemini API."""
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-3-flash-preview")
+        client = genai.Client(api_key=GEMINI_API_KEY)
 
-        # Truncate text to avoid token limits (keep first 8000 chars)
         truncated = text[:8000] if len(text) > 8000 else text
 
         prompt = f"""You are an expert academic question generator.
@@ -69,10 +58,12 @@ Return ONLY valid JSON in exactly this format, no extra text before or after:
 Study Material:
 {truncated}"""
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
         raw = response.text.strip()
 
-        # Strip markdown code fences if present
         if raw.startswith("```"):
             raw = raw.split("```")[1]
             if raw.startswith("json"):
@@ -81,11 +72,9 @@ Study Material:
 
         questions = json.loads(raw)
 
-        # Validate structure
         if "mcq" not in questions or "theory" not in questions:
             raise ValueError(f"Gemini returned unexpected JSON structure: {list(questions.keys())}")
 
-        # Validate counts
         if len(questions["mcq"]) == 0 and num_mcq > 0:
             raise ValueError("Gemini returned 0 MCQ questions.")
 
@@ -93,13 +82,10 @@ Study Material:
 
     except json.JSONDecodeError as e:
         print(f"JSON parse error from Gemini response: {e}")
-        print(f"Raw response was: {raw[:500]}")
         return None
 
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(f"Gemini API error: {e}")
         return None
-    except Exception as e:
-       import traceback
-       traceback.print_exc()
-       return None
